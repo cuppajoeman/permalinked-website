@@ -4,16 +4,18 @@ import os
 import json
 from os import walk
 
-script_directory = os.path.dirname(os.path.realpath(__file__))
-os.chdir("content")
-content_directory = os.getcwd()
 
-directory_structure = {}
-
-file_path_to_new_path = {}
+def get_content_directory():
+    with open('configuration.json') as f:
+        d = json.load(f)
+        s = "content_directory_relative_to_this_file"
+        assert s in d
+        content_directory = d[s]
+        return content_directory
 
 
 def add_uuid_to_files_without_one():
+    file_path_to_new_path = {}
     for dir_path, dirs, file_names in walk(content_directory):
         for name in file_names:
 
@@ -29,11 +31,6 @@ def add_uuid_to_files_without_one():
 
     for file_path, new_path in file_path_to_new_path.items():
         os.rename(file_path, new_path)
-
-
-# we know all files now have a uuid with them
-
-add_uuid_to_files_without_one()
 
 
 def generate_uuid_to_paths():
@@ -55,4 +52,14 @@ def write_to_json(data):
         json.dump(data, fp, indent=4)
 
 
-write_to_json(generate_uuid_to_paths())
+if __name__ == "__main__":
+
+    content_directory = get_content_directory()
+
+    script_directory = os.path.dirname(os.path.realpath(__file__))
+    os.chdir(content_directory)
+    content_directory = os.getcwd()
+
+    add_uuid_to_files_without_one()
+    # we know all files now have a uuid with them
+    write_to_json(generate_uuid_to_paths())
