@@ -7,3 +7,5 @@ To get started create a folder that you'd like to store your content in relative
 In the root of the content directory create`index.html` file make sure to load the `script.js` file as a script
 
 Next add content, and make sure to run `python main.py`, now when you add new files, then in your browser when you 
+
+https://www.w3.org/Provider/Style/URI
